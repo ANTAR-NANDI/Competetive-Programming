@@ -1,0 +1,69 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define pb push_back
+
+vector<int> indices;
+vector<int> createlps(string pat)
+{
+    int sz = pat.size();
+    vector<int>lps(sz);
+    int i = 0;
+    for(int j = 1 ; j<sz ; )
+    {
+        if(pat[i] == pat[j])
+        {
+            lps[j] = i+1;i++;j++;
+        }
+        else
+        {
+            if(i!=0) i = lps[i-1];
+            else j++;
+        }
+    }
+    return lps;
+}
+
+void kmp(string text, string pat)
+{
+    vector<int>lps = createlps(pat);
+    int sz = text.size(), i=0, j=0;
+    //bool found = false;
+    while(i<sz)
+    {
+        if(text[i] == pat[j])
+        {
+            i++ ; j++;
+        }
+        else
+        {
+            if(j!=0) j = lps[j-1];
+            else i++;
+        }
+        if(j == pat.size())
+        {
+            //found = 1;
+            indices.pb(i-pat.size());
+            j = lps[j-1];
+            //break;
+        }
+
+    }
+}
+int main()
+{
+   //freopen("input.txt","r",stdin);
+   string pat,text;
+
+   getline(cin,text);
+   getline(cin,pat);
+   kmp(text,pat);
+
+   int sz = indices.size();
+   if(sz == 0) cout << "Not found";
+   else
+   {
+       for(int i = 0 ; i<sz ; i++) cout << indices[i] << " ";
+   }
+
+return 0;
+}
